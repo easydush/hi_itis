@@ -3,9 +3,11 @@ from django.shortcuts import render, redirect
 # Create your views here
 from django.http import HttpResponse
 from django.views import View
+from rest_framework import viewsets
 
 from base.forms import MyForm, TeacherForm
 from base.models import Student, Teacher
+from base.serializers import TeacherSerializer
 
 
 def my_view(request):
@@ -54,3 +56,9 @@ class TeacherView(View):
             form.save_m2m()
 
             return redirect('/teachers')
+
+
+# ViewSets define the view behavior.
+class TeacherViewSet(viewsets.ModelViewSet):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
