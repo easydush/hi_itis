@@ -1,10 +1,11 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from base.views import my_view, MyView, TeacherView, TeacherViewSet, CustomAuthToken
+from base.views import my_view, MyView, TeacherView, TeacherViewSet, CustomAuthToken, StudentViewSet
 
 router = routers.DefaultRouter()
 router.register(r'teacher', TeacherViewSet)
+router.register(r'students', StudentViewSet)
 
 urlpatterns = [
     path('about/', my_view, name='my_view'),

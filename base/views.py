@@ -7,12 +7,12 @@ from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from base.forms import MyForm, TeacherForm
 from base.models import Student, Teacher
-from base.serializers import TeacherSerializer
+from base.serializers import TeacherSerializer, StudentSerializer
 
 
 def my_view(request):
@@ -69,6 +69,13 @@ class TeacherViewSet(viewsets.ModelViewSet):
     serializer_class = TeacherSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
+
+
+# ViewSets define the view behavior.
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.order_by('-id')
+    serializer_class = StudentSerializer
+    permission_classes = [AllowAny]
 
 
 class CustomAuthToken(ObtainAuthToken):
