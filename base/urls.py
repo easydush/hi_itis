@@ -12,5 +12,5 @@ urlpatterns = [
     path('hello/', MyView.as_view()),
     path('teachers/', TeacherView.as_view()),
     path('', include(router.urls)),
-    path('api-token-auth/', CustomAuthToken.as_view())
+    path('auth/', CustomAuthToken.as_view())
 ]

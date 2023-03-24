@@ -75,7 +75,8 @@ class TeacherViewSet(viewsets.ModelViewSet):
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.order_by('-id')
     serializer_class = StudentSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
 
 class CustomAuthToken(ObtainAuthToken):
