@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from base.views import my_view, MyView, TeacherView, TeacherViewSet, CustomAuthToken, StudentViewSet, HomePageView, \
-    stripe_config, create_checkout_session
+    stripe_config, create_checkout_session, SuccessView, CancelledView
 
 router = routers.DefaultRouter()
 router.register(r'teacher', TeacherViewSet)
@@ -17,4 +17,6 @@ urlpatterns = [
     path('auth/', CustomAuthToken.as_view()),
     path('config/', stripe_config),
     path('create-checkout-session/', create_checkout_session),
+    path('success/', SuccessView.as_view()),  # new
+    path('cancelled/', CancelledView.as_view()),  # new
 ]

@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from base.forms import MyForm, TeacherForm
 from base.models import Student, Teacher
 from base.serializers import TeacherSerializer, StudentSerializer
+from base.tasks import hello
 from hi_itis import settings
 
 
@@ -47,6 +48,8 @@ class MyView(View):
 
 class TeacherView(View):
     def get(self, request):
+        hello.apply_async()
+
         teachers = Teacher.objects.all()
 
         form = TeacherForm()
@@ -137,3 +140,20 @@ def create_checkout_session(request):
             return JsonResponse({'sessionId': checkout_session['id']})
         except Exception as e:
             return JsonResponse({'error': str(e)})
+
+
+class SuccessView(View):
+    def get(self, request):
+        print(request.GET)
+        session_id = request.GET.get('session_id', '')
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+
+        checkout_session = stripe.checkout.Session.retrieve(
+            session_id,
+        )
+        print(checkout_session)
+        return render(request, 'success.html')
+
+
+class CancelledView(TemplateView):
+    template_name = 'cancelled.html'
