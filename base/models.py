@@ -25,7 +25,7 @@ class Student(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.group.title}: {self.surname} {self.name} '
+        return f'{self.group.title}: {self.surname} {self.name}'
 
 
 class Teacher(models.Model):

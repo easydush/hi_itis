@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 import stripe
 from django.shortcuts import render, redirect
 
 # Create your views here
 from django.http import HttpResponse, JsonResponse
+from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
@@ -48,7 +51,7 @@ class MyView(View):
 
 class TeacherView(View):
     def get(self, request):
-        hello.apply_async()
+        hello.apply_async(eta=now() + timedelta(seconds=15))
 
         teachers = Teacher.objects.all()
 
