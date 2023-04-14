@@ -51,7 +51,7 @@ class MyView(View):
 
 class TeacherView(View):
     def get(self, request):
-        hello.apply_async(eta=now() + timedelta(seconds=15))
+        hello.apply_async()
 
         teachers = Teacher.objects.all()
 

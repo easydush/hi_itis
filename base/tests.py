@@ -8,7 +8,6 @@ class StudentTestCase(TestCase):
         self.student = Student.objects.create(name="Jordan", group_id=self.group.id, surname='Baker')
 
     def test_student_str(self):
-
         self.assertEqual(str(self.student), f'{self.group.title}: {self.student.surname} {self.student.name}')
         """Animals that can speak are correctly identified"""
         # lion = Animal.objects.get(name="lion")
