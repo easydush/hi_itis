@@ -38,6 +38,8 @@ SECRET_KEY = env('SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY= env('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY= env('STRIPE_SECRET_KEY')
 
+YANDEX_CLIENT_ID= env('YANDEX_CLIENT_ID')
+YANDEX_CLIENT_SECRET= env('YANDEX_CLIENT_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -61,6 +63,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'payments.apps.PaymentsConfig',
     'django_celery_beat',
+    'djoser',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -169,10 +173,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
+}
+
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
 }
 
 SWAGGER_SETTINGS = {

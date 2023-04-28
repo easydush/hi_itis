@@ -1,10 +1,12 @@
+import base64
 from datetime import timedelta
 
+import requests
 import stripe
 from django.shortcuts import render, redirect
 
 # Create your views here
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -21,6 +23,7 @@ from base.models import Student, Teacher
 from base.serializers import TeacherSerializer, StudentSerializer
 from base.tasks import hello
 from hi_itis import settings
+from hi_itis.settings import YANDEX_CLIENT_ID, YANDEX_CLIENT_SECRET
 
 
 def my_view(request):
@@ -102,6 +105,7 @@ class CustomAuthToken(ObtainAuthToken):
             'email': user.email
         })
 
+
 class HomePageView(TemplateView):
     template_name = 'home.html'
 
@@ -112,6 +116,7 @@ def stripe_config(request):
         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
         print(stripe_config)
         return JsonResponse(stripe_config, safe=False)
+
 
 @csrf_exempt
 def create_checkout_session(request):
@@ -160,3 +165,34 @@ class SuccessView(View):
 
 class CancelledView(TemplateView):
     template_name = 'cancelled.html'
+
+
+class YandexAuthView(View):
+    def get(self, request):
+        YANDEX_URL = 'https://oauth.yandex.ru/authorize?response_type=code'
+        url = f'{YANDEX_URL}&client_id={YANDEX_CLIENT_ID}'
+        return HttpResponseRedirect(redirect_to=url)
+
+
+class YandexResponseView(View):
+    def get(self, request):
+        code = request.GET.get('code', '')
+        if code:
+            b = base64.b64encode(bytes(f'{YANDEX_CLIENT_ID}:{YANDEX_CLIENT_SECRET}', 'utf-8'))  # bytes
+            encoded = b.decode('utf-8')  # convert bytes to string
+            headers = {'Authorization': f'Basic {encoded}'}
+            url = f'https://oauth.yandex.ru/token'
+            data = {'grant_type': 'authorization_code', 'code': f'{code}'}
+            response = requests.post(url=url, headers=headers, data=data)
+            data = response.json()
+            print(data)
+
+            headers = {'Authorization': f'OAuth {data.get("access_token")}'}
+            print(headers)
+
+            url = f'https://login.yandex.ru/info?format=json'
+            response = requests.get(url=url, headers=headers)
+            print(response)
+            data = response.json()
+            print(data)
+        return HttpResponseRedirect(redirect_to='http://localhost:3000/main/')
