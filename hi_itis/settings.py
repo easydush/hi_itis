@@ -65,7 +65,33 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'djoser',
     'rest_framework_simplejwt',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.yandex',
 ]
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+SITE_ID = 1
+ACCOUNT_EMAIL_REQUIRED=True
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'yandex': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': env('YANDEX_CLIENT_ID'),
+            'secret': env('YANDEX_CLIENT_SECRET'),
+            'key': ''
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -205,3 +231,9 @@ CELERY_RESULT_BACKEND = "redis://" + REDIS_HOST + ":" + REDIS_PORT + "/0"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = env('EMAIL_HOST_USER')
+EMAIL_USE_SSL = True

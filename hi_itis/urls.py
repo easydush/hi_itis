@@ -39,6 +39,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('base/', include('base.urls')),
+    path('accounts/', include('allauth.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
